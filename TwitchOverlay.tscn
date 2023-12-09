@@ -1,0 +1,163 @@
+[gd_scene load_steps=17 format=3 uid="uid://cqk87p2kh8ll"]
+
+[ext_resource type="Script" path="res://TwitchOverlay.gd" id="1_qqb08"]
+[ext_resource type="Script" path="res://PNGTuber.gd" id="3_2s5y4"]
+[ext_resource type="Texture2D" uid="uid://d0aghmk82i5gg" path="res://pngtuber/issork_png-eo-mo.png" id="3_uj25n"]
+[ext_resource type="Texture2D" uid="uid://cne4d5hufds7n" path="res://pngtuber/issork_png-eo-mc.png" id="4_1uyel"]
+[ext_resource type="Texture2D" uid="uid://byr5r1cgyeicy" path="res://pngtuber/issork_png-ec-mo.png" id="5_sctlg"]
+[ext_resource type="Texture2D" uid="uid://dm07yic8oj8wj" path="res://pngtuber/issork_png-ec-mc.png" id="6_1vjd5"]
+[ext_resource type="Shader" path="res://FadeOut.gdshader" id="7_ars8m"]
+[ext_resource type="Script" path="res://Emotes.gd" id="8_fr47h"]
+[ext_resource type="Script" path="res://nervous_effect.gd" id="9_m1108"]
+[ext_resource type="Script" path="res://FollowNotification.gd" id="10_db4t5"]
+[ext_resource type="PackedScene" uid="uid://dao6trwsokwnm" path="res://messages.tscn" id="11_vri42"]
+
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_pgphj"]
+
+[sub_resource type="Gradient" id="Gradient_qjrgi"]
+offsets = PackedFloat32Array(0.221311, 0.409836)
+colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ivexk"]
+gradient = SubResource("Gradient_qjrgi")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_irt3b"]
+shader = ExtResource("7_ars8m")
+shader_parameter/mask = SubResource("GradientTexture1D_ivexk")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_m20f2"]
+script = ExtResource("9_m1108")
+
+[node name="TwitchOverlay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qqb08")
+channel = "issork"
+username = "issork"
+
+[node name="PNGTuber" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(240, 240)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -293.0
+offset_top = -240.0
+offset_right = -53.0
+grow_horizontal = 0
+grow_vertical = 0
+expand_mode = 2
+flip_h = true
+script = ExtResource("3_2s5y4")
+mouth_open_eyes_open = ExtResource("3_uj25n")
+mouth_closed_eyes_open = ExtResource("4_1uyel")
+mouth_open_eyes_closed = ExtResource("5_sctlg")
+mouth_closed_eyes_closed = ExtResource("6_1vjd5")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="PNGTuber"]
+stream = SubResource("AudioStreamMicrophone_pgphj")
+autoplay = true
+bus = &"Record"
+
+[node name="Chat" type="SubViewportContainer" parent="."]
+material = SubResource("ShaderMaterial_irt3b")
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -374.0
+offset_bottom = 401.0
+grow_horizontal = 0
+
+[node name="SubViewport" type="SubViewport" parent="Chat"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(350, 420)
+render_target_update_mode = 4
+
+[node name="Panel" type="Panel" parent="Chat/SubViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Messages" parent="Chat/SubViewport" instance=ExtResource("11_vri42")]
+unique_name_in_owner = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="Emotes" type="Control" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("8_fr47h")
+duration = 4.0
+
+[node name="FollowNotification" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -280.0
+offset_top = 93.0
+offset_right = 280.0
+offset_bottom = 133.0
+grow_horizontal = 2
+theme_override_font_sizes/normal_font_size = 30
+theme_override_font_sizes/bold_font_size = 30
+theme_override_font_sizes/italics_font_size = 30
+theme_override_font_sizes/bold_italics_font_size = 30
+theme_override_font_sizes/mono_font_size = 30
+bbcode_enabled = true
+text = "[center][nervous scale=1.5 frequency=110.0]Test followed your channel!"
+fit_content = true
+scroll_active = false
+custom_effects = [SubResource("RichTextEffect_m20f2")]
+script = ExtResource("10_db4t5")
+
+[node name="StreamGoal" type="ProgressBar" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -400.0
+offset_top = 11.0
+offset_right = -11.0
+offset_bottom = 43.0
+grow_horizontal = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+value = 50.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="StreamGoal"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -67.0
+offset_top = -11.5
+offset_right = 67.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
