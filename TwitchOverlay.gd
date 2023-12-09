@@ -2,7 +2,7 @@ extends Control
 
 const TOKEN_FILE : String = "user://token.json"
 
-@export var client_id : String = "9x951o0nd03na7moohwetpjjtds0or"
+@export var client_id : String
 @export var channel : String
 @export var username : String
 

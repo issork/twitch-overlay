@@ -36,8 +36,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qqb08")
-channel = "issork"
-username = "issork"
 
 [node name="PNGTuber" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(240, 240)
